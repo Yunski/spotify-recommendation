@@ -119,24 +119,17 @@ class Spotify_Dataset(Dataset):
         rows = []
         if self.use_audio_features:
             if self.is_train:
-                pos_rows = session.query(self.split_table_pos) \
+                rows = session.query(self.split_table_pos) \
                     .options(joinedload(self.split_table_pos.track_features, innerjoin=True)) \
                     .filter(self.split_table_pos.user_id == user_id).all() 
-                neg_rows = session.query(self.split_table_neg) \
-                    .options(joinedload(self.split_table_neg.track_features, innerjoin=True)) \
-                    .filter(self.split_table_neg.user_id == user_id).all() 
-                rows = pos_rows + neg_rows
             else:
                 rows = session.query(self.split_table) \
                     .options(joinedload(self.split_table.track_features, innerjoin=True)) \
                     .filter(self.split_table.user_id == user_id).all()
         else:
             if self.is_train:
-                pos_rows = session.query(self.split_table_pos) \
+                rows = session.query(self.split_table_pos) \
                     .filter(self.split_table_pos.user_id == user_id).all()
-                neg_rows = session.query(self.split_table_neg) \
-                    .filter(self.split_table_neg.user_id == user_id).all()
-                rows = pos_rows + neg_rows
             else:
                 rows = session.query(self.split_table) \
                     .filter(self.split_table.user_id == user_id).all()

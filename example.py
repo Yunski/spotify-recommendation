@@ -55,11 +55,11 @@ def test_user(args):
         print("user {} - precision: {:.4f} - recall: {:.4f}  acc: {:.4f}".format(
             args.user_id, precision, recall, acc))
         item_indices = item_indices.data.cpu().numpy().astype(int)
+        item_indices = np.unique(item_indices)
         if args.split == 'train':
             item_indices = [x.item() for x in item_indices]
         else:
             item_indices = [x.item() for x in item_indices[preds == 1]]
-        item_indices = np.unique(item_indices)
         tracks = dataset.get_track_names(item_indices)
         with open("{}_{}.txt".format(args.split, args.user_id), "w") as f:
             for track in tracks:
